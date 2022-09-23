@@ -14,6 +14,8 @@
 
    size()是**列表**的自带方法，求的是列表的长度，使用形式是：`list.size()`
 
+
+
 2
 
 3
@@ -21,6 +23,8 @@
 # 4、寻找两个正序数组的中位数
 
 ![image-20220922220554936](pic/image-20220922220554936.png)
+
+
 
 # 5、最长回文子串
 
@@ -70,6 +74,54 @@
 3. 时间复杂度：O(n^2)
 
    空间复杂度：O(n^2)
+
+
+
+# 707、设计链表
+
+![image-20220923102230396](pic/image-20220923102230396.png)
+
+Java语言使用链表格式：
+
+```java
+class MyLinkedList {
+    static class Node {
+        int val;
+        Node pre;
+        Node next;
+        public Node() {
+        }
+        public Node(int val) {
+            this.val = val;
+        }
+    }
+
+    Node head;
+    int size=0;
+
+    public MyLinkedList() {
+        head = new Node();
+        head.next = head;
+        head.pre = head;
+    }
+    
+    public int get(int index) {
+        Node node = head;
+        //......
+    }
+    //......
+}
+
+//调用
+MyLinkedList linkedList = new MyLinkedList();
+linkedList.get(1);    
+```
+
+
+
+
+
+
 
 # 1640、能否连接形成数组
 
