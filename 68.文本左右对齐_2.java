@@ -21,7 +21,7 @@ class Solution {
             }
             if (wordslen+words[i].length()+1 <= maxWidth) {   //每个元素后面都加一个空格
                 wordslen += words[i].length()+1;    //当前字符串的长度
-                reallen += words[i].length(); 
+                reallen += words[i].length();
                 if (i == len-1) {    //在最大长度范围内，且i元素是最后一个元素，截断最后一部分
                     int l = i - start;     //l为-1表示只有一个元素
                     for (int t = start;t<=i;t++) {
@@ -41,7 +41,7 @@ class Solution {
             else {     //加上i的字符串已经超过了最大长度
                 if (wordslen+words[i].length() == maxWidth) {     //对于i元素，如果不加空格可以收入，此时i元素可以成立
                     wordslen += words[i].length();
-                    reallen += words[i].length(); 
+                    reallen += words[i].length();
                     int lo = maxWidth - reallen;
                     int l = i - start;
                     if (l==0) {     //只有当前一个元素
@@ -63,7 +63,7 @@ class Solution {
                                     }
                                 }
                             }
-                            else {     
+                            else {
                                 int k = lo%l;
                                 for (int j=start;j<i;j++) {
                                     sb.append(words[j]);
@@ -78,7 +78,7 @@ class Solution {
                                             sb.append(" ");
                                         }
                                     }
-                                    
+
                                 }
                             }
                         }
@@ -117,7 +117,7 @@ class Solution {
                                     }
                                 }
                             }
-                            else {     
+                            else {
                                 int k = lo%l;
                                 for (int j=start;j<i-1;j++) {
                                     sb.append(words[j]);
@@ -132,10 +132,10 @@ class Solution {
                                             sb.append(" ");
                                         }
                                     }
-                                    
+
                                 }
                             }
-                        }  
+                        }
                         sb.append(words[i-1]);     //最后一个右边不空
                         String s = new String(sb);
                         ls.add(s);
@@ -145,9 +145,9 @@ class Solution {
                 }
                 wordslen = 0;
                 reallen = 0;
-                
+
             }
-            
+
         }
         return ls;
     }
