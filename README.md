@@ -77,6 +77,73 @@
 
 
 
+# 11、盛最多水的容器⭐
+
+![image-20220924130921512](pic/image-20220924130921512.png)
+
+逻辑性很强
+
+
+
+# 15、三数之和
+
+![image-20220924125048130](pic/image-20220924125048130.png)
+
+1. List<List<Integer>> 的定义
+
+   ```java
+   List<List<Integer>> result = new ArrayList<List<Integer>>();
+   ```
+
+2. List<Integer>的定义
+
+   ```java
+   List<Integer> r = new ArrayList<Integer>()
+   ```
+
+3. List的添加操作
+
+   ```java
+   list1.add(r);    //r必须是list的<>内的类型，在尾部插入
+   ```
+
+4. List的搜索操作
+
+   ```java
+   list1.get(index);    //获取list下标为index的数值
+   ```
+
+5. int转为Integer
+
+   ```java
+   int a;
+   Integer b = Integer.valueOf(a);
+   ```
+
+6. 数组的排序
+
+   ```java
+   Arrays.sort(nums);     //原地修改nums数组
+   ```
+
+
+
+# 26、删除有序数组中的重复项
+
+![image-20220924130553781](pic/image-20220924130553781.png)
+
+双指针思路
+
+
+
+# 68、文本左右对齐⭐
+
+
+
+
+
+
+
 # 707、设计链表
 
 ![image-20220923102230396](pic/image-20220923102230396.png)
@@ -127,3 +194,12 @@ linkedList.get(1);
 
 ![image-20220922221718430](pic/image-20220922221718430.png)
 
+
+
+# 1652、拆炸弹
+
+![image-20220924104449440](pic/image-20220924104449440.png)
+
+负数的求余：
+
+被除数的绝对值与除数绝对值取余的值即为余数绝对值，余数符号与被除数一致。
