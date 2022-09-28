@@ -112,7 +112,7 @@
 2. List<Integer>的定义
 
    ```java
-   List<Integer> r = new ArrayList<Integer>()
+   List<Integer> r = new ArrayList<Integer>();
    ```
 
 3. List的添加操作
@@ -251,6 +251,140 @@ linkedList.get(1);
 负数的求余：
 
 被除数的绝对值与除数绝对值取余的值即为余数绝对值，余数符号与被除数一致。
+
+
+
+# 面试题 01.02. 判定是否互为字符重排⭐
+
+![image-20220928215225321](pic/image-20220928215225321.png)
+
+本题可以使用将字符串转为字符数组：
+
+```java
+char[] sa1 = s1.toCharArray();
+```
+
+再对字符数组进行排序，一样可以使用Arrays.sort()：
+
+```java
+Arrays.sort(sa1);     //对sa1原地排序
+```
+
+判断两个字符数组是否相同，可以先将字符数组转为字符串：
+
+```java
+String s = String.valueOf(sa1);
+```
+
+字符串的比较：
+
+```java
+s1.equals(s2);    //返回true或者false
+```
+
+
+
+# 面试题17.09.第k个数
+
+## 方法一、硬算
+
+![image-20220928204023119](pic/image-20220928204023119.png)
+
+使用方法三的手法进行优化
+
+![image-20220928214832520](pic/image-20220928214832520.png)
+
+List本质上就是动态数组
+
+创建：
+
+```java
+List<Integer> list = new ArrayList<Integer>();
+```
+
+添加：
+
+```java
+list.add(16);
+```
+
+查询：
+
+```java
+list.get(0);     // 通过下标查询
+```
+
+## 方法二、小根堆
+
+![image-20220928211555288](pic/image-20220928211555288.png)
+
+### 小根堆
+
+小根堆的创建：
+
+```java
+PriorityQueue<Long> q = new PriorityQueue<>();
+```
+
+小根堆添加操作：
+
+```java
+q.add(5);
+```
+
+小根堆判断是否为空：
+
+```java
+q.isEmpty()    //如果是空则返回true
+```
+
+小根堆弹出操作（弹出最小的数，并返回此数）：
+
+```java
+long t = q.poll();
+```
+
+### Set集合
+
+Set 表示唯一对象的集合。集合中元素的排序是不相关的。
+
+#### HashSet
+
+HashSet 基于 HashMap 来实现的，是一个**不允许有重复元素的集合**。
+
+HashSet 允许有 null 值。
+
+HashSet **是无序的，即不会记录插入的顺序**。
+
+HashSet 实现了 Set 接口。（这就是为什么这个解法可以使用`Set<Long> set = new HashSet<>();`）
+
+Set对象的创建：
+
+```
+Set<Long> set = new HashSet<>();
+```
+
+Set对象的添加操作：
+
+```java
+set.add(6);
+```
+
+Set对象的判断是否存在操作：
+
+```java
+set.contains(k)     //判断k这个值在set中是否存在，存在则返回true
+```
+
+## 方法三、多路归并（多指针）（方法一优化）
+
+![image-20220928214035095](pic/image-20220928214035095.png)
+
+设置3个指针，分别是对于\*3、\*5、*7的，每次比较选择最小的加入到数组中。
+
+### 注意
+
+在使用两个数比大小时，尽量使用`Math.min(a,b)`。如果时三个数，使用`Math.min(a,Math.min(b,c))`。
 
 
 
