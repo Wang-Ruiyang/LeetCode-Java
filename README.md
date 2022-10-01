@@ -127,14 +127,20 @@
    list1.get(index);    //获取list下标为index的数值
    ```
 
-5. int转为Integer
+5. List查找某个元素是否在其中
+
+   ```java
+   list.contains(s);    //查找s这个元素是否在list中
+   ```
+
+6. int转为Integer
 
    ```java
    int a;
    Integer b = Integer.valueOf(a);
    ```
 
-6. 数组的排序
+7. 数组的排序
 
    ```java
    Arrays.sort(nums);     //原地修改nums数组
@@ -286,6 +292,80 @@ linkedList.get(1);
 
 
 
+# 1694、重新格式化电话号码
+
+## 方法一、常规逻辑
+
+![image-20221001102615465](pic/image-20221001102615465.png)
+
+先除去多余字符，再插入'-'
+
+substring()使用方法：
+
+```java
+s = s.substring(1,5);    //截取下标1~4
+
+s = s.substring(5);   //截取下标为5~end
+```
+
+replace()使用方法
+
+```java
+s = s.replace("-","");    //将全文的-变成无
+```
+
+## 方法二、StringBuilder方法
+
+![image-20221001115656084](pic/image-20221001115656084.png)
+
+> String内容是不可变的，StringBuilder内容是可变的
+>
+> StringBuilder处理字符串性能比String好
+
+StringBuilder的创建
+
+```java
+StringBuilder sb = new StringBuilder();
+```
+
+StringBuilder的尾部插入
+
+```java
+sb.append("wry");
+```
+
+StringBuilder的中间插入
+
+```java
+sb.insert(0,'w');    //在下标为0之前插入字符w
+```
+
+StringBuilder的长度
+
+```java
+int n = sb.length();
+```
+
+StringBuilder的删除
+
+```java
+sb.delete(6, 14);    //删除下标为[6,14)
+```
+
+StringBuilder转为String
+
+```java
+String s = sb.toString();
+```
+
+String转为StringBuilder
+
+```java
+StringBuilder sb = new StringBuilder(s);
+```
+
+
+
 # 面试题 01.02. 判定是否互为字符重排⭐
 
 ![image-20220928215225321](pic/image-20220928215225321.png)
@@ -313,6 +393,30 @@ String s = String.valueOf(sa1);
 ```java
 s1.equals(s2);    //返回true或者false
 ```
+
+
+
+# 面试题 01.08、零矩阵
+
+## 方法一、两次遍历
+
+![image-20220930094258272](pic/image-20220930094258272.png)
+
+对二维数组遍历两遍，第一遍是为了找到受影响的行和列，第二遍是针对这些行和列做处理。
+
+List查找某个元素是否在其中，可以用：（List其他操作见15题）
+
+```java
+list.contains(s);    //查找s这个元素是否在list中
+```
+
+## 方法二、两个标记变量
+
+![image-20220930101828955](pic/image-20220930101828955.png)
+
+这个思路就是将第一行第一列作为标签，如果matrix中i行j列为0，则将第一行的j列和第一列的i行置为0即可。但是为了保存第一行和第一列的信息，我需要先判断如果第一行中没有0，但是由于matrix\[i]\[j]为0，所以第一行的第j列必然为0。所以在操作之前先判断第一行和第一列是否有0，如果有则在最后一步将其全置为0。接下来的操作是分析除去第一行和第一列的元素，如果为0，则其对应的第一行的元素和第一列的元素变为0。遍历完之后，根据第一行和第一列的情况对内部元素操作。最后按照上面刚说的那样对第一行和第一列处理。
+
+
 
 
 
