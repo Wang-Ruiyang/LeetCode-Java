@@ -188,6 +188,76 @@
 
 
 
+# 33、搜索旋转排序数组
+
+遇到时间复杂度`O(log n)`，二话不说，直接**二分查找**！
+
+## 方法一、暴力（不满足log(n)）
+
+![image-20221002171738960](pic/image-20221002171738960.png)
+
+## 方法二、二分法（不完全满足log(n)）
+
+![image-20221002172037673](pic/image-20221002172037673.png)
+
+先求出向左移动的次数k，然后再用二分法判定，每次结果也便宜k。
+
+## 方法三、二分法优化（满足log(n)）
+
+![image-20221002175004110](pic/image-20221002175004110.png)
+
+这个方法简单又巧妙。
+
+正常二分后，先判断mid的值是不是target，再看左边和右边哪个是顺序的。
+
+如果`nums[left] <= nums[mid]`，说明左边是顺序的。再看target是不是再左边区间里，如果是则`right = mid-1`；**否则，**`left = mid+1`，继续在右边找。
+
+如果`nums[left] > nums[mid]`，说明左边是不规则的，那么右边一定是顺序的。再看target是不是再右边区间里，如果是则`left = mid+1`；**否则，**`right = mid-1`，继续在左边找。
+
+
+
+# 34、在排序数组中查找元素的第一个和最后一个位置
+
+遇到时间复杂度`O(log n)`，二话不说，直接**二分查找**！
+
+## 方法一、二分+扩张
+
+![image-20221002123506969](pic/image-20221002123506969.png)
+
+先找到值为target的数组的元素的位置，再向两边扩张，找到左右边界。
+
+## 方法二、二分查找性质
+
+![image-20221002123926754](pic/image-20221002123926754.png)
+
+这种方法的思路很妙，要想找到数组中值为target的范围，只要找到数组中>=target和target+1的第一个值的下标。
+
+> 例：
+>
+> nums = [5,7,7,8,8,10], target = 8
+
+先找target=8的第一个位置：
+
+1. left = 0，right = 6，mid = 3，找到了一个，往左边找
+2. left = 0，right = 3，mid = 1，小了
+3. left = 2，right = 3，mid = 2，小了
+4. left = 3，right = 3，mid = 3，当left==right，结束，此时left就是第一个
+
+再找target=9的第一个位置：
+
+1. left = 0，right = 6，mid = 3，小了
+2. left = 4，right = 6，mid = 5，大了
+3. left = 4，right = 5，mid = 4，小了
+4. left = 5，right = 5，mid = 5，当left==right，结束，此时left就是第一个的位置
+
+除此之外，我们还需要判断target=8的时候到底有没有这个值哦~
+
+注意：
+
+本题的right初始值为n，后来right更新为mid，和我们过去使用的二分法略有不同，因为如果mid就是我需要的那个值，且它就是第一个出现的，按照过去的算法，right=mid-1，最后可能会丢失了这个mid。但是新的算法一直用right保存mid，**只要一直在找左区间，就需要将我们的目标范围不停往左边移动**，就应该用right保存mid，最后一定会出现left、right、mid相等的情况，也就是左区间。
+
+
+
 # 68、文本左右对齐
 
 ## 方法一、枚举各种情况
@@ -267,6 +337,58 @@ class MyLinkedList {
 MyLinkedList linkedList = new MyLinkedList();
 linkedList.get(1);    
 ```
+
+
+
+# 777、在LR字符串中交换相邻字符⭐
+
+![image-20221002122050879](pic/image-20221002122050879.png)
+
+思路：
+
+由题意可以知道，L是可以穿过X向左移动，R可以穿过X向右移动，但是L和R都无法互相穿过。因此，单纯地觉得只要将start和end去掉所有的X只要相等就返回true，像下面代码所示：
+
+```java
+class Solution {
+    public boolean canTransform(String start, String end) {
+        if (start.length() != end.length()) {
+            return false;
+        }
+        int n = start.length();
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        for (int i=0;i<n;i++) {
+            if (start.charAt(i) != 'X' ) {
+                sb1.append(start.charAt(i));
+            }
+            if (end.charAt(i) != 'X' ) {
+                sb2.append(end.charAt(i));
+            }
+        }
+        return sb1.toString().equals(sb2.toString());
+    }
+}
+```
+
+然而出现了一个不可忽略的错误：
+
+> 例：
+>
+> "LXXLXRLXXL" 
+>
+> "XLLXRXLXLX"
+
+题意是：`XL ==> LX；RX ==> XR` 。
+
+按照上面代码所述，不仅可以XL变为LX，也可以LX变为XL，这是不合题意的！
+
+因此需要增加一个限定条件，即**start中的L要比end中对应的L的下标要大，start中的R要比end中对应的R的下标要小。**
+
+所以，不能使用一次循环，需要使用双指针进行判断。
+
+新代码思路是：
+
+对于i和j分别指向start和end字符串，每次分别找一个非X字符，如果相同且满足i和j的关系的，则i++和j++；如果不满足直接返回false。这样的匹配规则，如果是可以完成匹配的，应该是i和j在某一次循环内同时到达终点，**不会存在i卡在某个非X字符，j已经到了终点**，如果是这种情况（即只有一个到了终点的），则之间判断i和j是否相等，如果相等，则返回true，不相等则返回false。
 
 
 
