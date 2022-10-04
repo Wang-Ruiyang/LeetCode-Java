@@ -258,6 +258,163 @@
 
 
 
+# 39、组合总和⭐
+
+## 方法一、双端队列+DFS
+
+![image-20221004214508995](pic/image-20221004214508995.png)
+
+![image-20221004211227805](pic/image-20221004211227805.png)
+
+候选数组里有 2，如果找到了组合总和为 7 - 2 = 5 的所有组合，再在之前加上 2 ，就是 7 的所有组合。同理考虑 3，如果找到了组合总和为 7 - 3 = 4 的所有组合，再在之前加上 3 ，就是 7 的所有组合，依次这样找下去。
+
+### 相关知识
+
+#### List\<List>
+
+构造
+
+```java
+List<List<Integer>> res = new ArrayList<>();
+```
+
+添加
+
+```java
+res.add(new ArrayList<>(path));
+```
+
+#### Deque双端队列
+
+两端都可以进出，FIFO（先进先出）
+
+构造
+
+```java
+Deque<Integer> dq = new LinkedList<>();
+```
+
+操作
+
+端队列的开头移除元素。从 Queue 接口继承的方法完全等效于 Deque 方法，如下表所示：
+
+|      | 第一个元素 (头部) |               | 最后一个元素 (尾部) |              |
+| ---- | ----------------- | ------------- | ------------------- | ------------ |
+|      | 抛出异常          | 特殊值        | 抛出异常            | 特殊值       |
+| 插入 | addFirst(e)       | offerFirst(e) | addLast(e)          | offerLast(e) |
+| 删除 | removeFirst()     | pollFirst()   | removeLast()        | pollLast()   |
+| 检查 | getFirst()        | peekFirst()   | getLast()           | peekLast()   |
+
+Deque与Queue的对照
+
+| Queue方法 | 等效Deque方法 |
+| --------- | ------------- |
+| add(e)    | addLast(e)    |
+| offer(e)  | offerLast(e)  |
+| remove()  | removeFirst() |
+| poll()    | pollFirst()   |
+| element() | getFirst()    |
+| peek()    | peekFirst()   |
+
+在将双端队列用作堆栈时，元素被推入双端队列的开头并从双端队列开头弹出。堆栈方法完全等效于 Deque 方法，如下表所示：
+
+| **堆栈方法** | **等效Deque方法** |
+| ------------ | ----------------- |
+| push(e)      | addFirst(e)       |
+| pop()        | removeFirst()     |
+| peek()       | peekFirst()       |
+
+代码：
+
+```java
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+
+class Solution {
+
+    public static void DFS(int[] candidates, int begin, int len, int target, Deque<Integer> path, List<List<Integer>> res) {
+        if (target < 0) {
+            return;
+        }
+        else if (target == 0) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i=begin;i<len;i++) {
+            path.addLast(candidates[i]);     //双端队列在结尾增加
+            DFS(candidates,i,len,target-candidates[i],path,res);
+            path.removeLast();    //双端队列删去刚刚在上一个DFS中加入的值，继续进入循环，判断下一个分支
+        }
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        int len = candidates.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (len==0) {
+            return res;
+        }
+
+        Deque<Integer> path = new LinkedList<>();   //构造一个双端队列
+
+        DFS(candidates,0,len,target,path,res);
+
+        return res;
+    }
+}
+```
+
+## 方法二、剪枝叶
+
+![image-20221004211040594](pic/image-20221004211040594.png)
+
+在一开始就对数组进行排序，因为在分支中，如果`target-candidates[i] < 0`，那么这个分支之后的更大的i就更不可能了。直接break即可。
+
+```java
+for (int i=begin;i<len;i++) {
+    if (target-candidates[i]<0) {
+        break;
+    }
+    path.addLast(candidates[i]);     //双端队列在结尾增加
+    DFS(candidates,i,len,target-candidates[i],path,res);
+    path.removeLast();    //双端队列删去刚刚在上一个DFS中加入的值，继续进入循环，判断下一个分支
+}
+```
+
+
+
+# 40、组合总和II
+
+![image-20221004222241402](pic/image-20221004222241402.png)
+
+和39题是同样的思路
+
+唯一的不同是每次begin是从下一个更大的数开始。
+
+**注意：**
+
+在剪枝中，注意要两次剪枝。
+
+第一次剪枝和39题一样：
+
+```java
+//第一次剪枝
+if (target - candidates[i] < 0) {
+	break;
+}
+```
+
+第二次剪枝是为了消除一样的结果，注意在`i>begin`时，`candidates[i]==candidates[i-1]`表示是在同一级有相同元素。
+
+```java
+//第二次剪枝
+if (i>begin && candidates[i]==candidates[i-1]) {
+	continue;
+}
+```
+
+
+
 # 68、文本左右对齐
 
 ## 方法一、枚举各种情况
@@ -485,6 +642,20 @@ String转为StringBuilder
 ```java
 StringBuilder sb = new StringBuilder(s);
 ```
+
+
+
+# 1784、检查二进制字符串字段
+
+## 方法一、正常思路
+
+![image-20221003091100144](pic/image-20221003091100144.png)
+
+## 方法二、一行代码
+
+![image-20221003091323854](pic/image-20221003091323854.png)
+
+本题可以转化为只能出现一次`10`，也就是只能出现111111000000这种情况。
 
 
 
