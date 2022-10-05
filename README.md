@@ -1,10 +1,17 @@
 # 1、两数之和
 
-## length的使用
+### length的使用
 
 1. `length`
 
    length是属性，是**数组**的长度，使用时的形式是：数组`.length`不加括号
+
+   例如：
+
+   ```java
+   String[] cp;
+   int n = cpdomains.length;
+   ```
 
 2. `length()`
 
@@ -16,10 +23,6 @@
 
 
 
-2
-
-3
-
 # 4、寻找两个正序数组的中位数
 
 ![image-20220922220554936](pic/image-20220922220554936.png)
@@ -28,7 +31,7 @@
 
 # 5、最长回文子串
 
-## 中心扩张法
+## 方法一、中心扩张法
 
 ![image-20220920211209159](pic/image-20220920211209159.png)
 
@@ -58,8 +61,7 @@
    char st = s.charAt(3);
    ```
 
-
-## 动态规划
+## 方法二、动态规划
 
 ![image-20220920211102615](pic/image-20220920211102615.png)
 
@@ -552,6 +554,180 @@ class Solution {
 # 788、旋转数字
 
 ![image-20220925165535500](pic/image-20220925165535500.png)
+
+
+
+# 811、子域名访问计数
+
+![image-20221005111235484](pic/image-20221005111235484.png)
+
+本题逻辑简单，但是涉及很多java语法知识。
+
+### HashMap（散列表）
+
+创建
+
+```java
+HashMap<String,Integer> hash = new HashMap<String,Integer>();
+```
+
+添加键值对
+
+```java
+hash.put("abc",2);
+```
+
+查找值
+
+```java
+hash.get("abc");    //输出2
+```
+
+更新值
+
+```java
+hash.replace("abc",3);    //以后hash里面"abc"对应的value就是3
+```
+
+```java
+hash.replace("abc",2,3);    //只对hash键值对为"abc"-2的修改value为3，如果键值对不符合则返回false
+```
+
+查找键值对数量
+
+```java
+hash.size()
+```
+
+判断是否为空
+
+```java
+hash.isEmpty()    //如果为空返回true
+```
+
+判断是否有某个key
+
+```java
+hash.containsKey("abc")    //如果有则返回true
+```
+
+判断是否有某个value
+
+```java
+hash.containsValue(3)    //如果有则返回true
+```
+
+遍历
+
+```java
+//方法一、forEach
+hash.forEach((key,value)-> {
+    //对于每一组key和value的操作
+    String s = value.toString() + key;
+    res.add(s);
+});    //不要忘记分号
+```
+
+
+```java
+//方法二、最推荐，遍历entey获取key和value
+for (Map.Entry<String,Integer> entry : map.entrySet()) {  //entrySet()返回hashMap中所有映射项的集合集合视图。
+    String key = entry.getKey();
+    Integer value = entry.getValue();
+}
+```
+
+
+```java
+//方法三、单独取出key和value
+for (String key : hash.KeySet()) {    //keySet()返回hashMap中所有key组成的集合视图。
+    //对key操作
+}
+for (String value : hash.values()) {    //values()返回hashMap中所有value组成的集合视图。
+    //对key操作
+}
+```
+
+删除所有键值对
+
+```java
+hash.clear();
+```
+
+### 字符串按空格分割
+
+对于`String s = "a  b     c  d e f      g"`
+
+分割单个空格
+
+```java
+String[] sa = s.split(" ");
+//遍历输出后：
+//a
+//
+//b
+//
+//
+//
+//
+//c
+//
+//d
+//e
+//f
+//
+//
+//
+//
+//
+//g
+//
+```
+
+分割多个连续空格
+
+```java
+String[] sa = s.split("\\s+");    //正则
+//遍历后：
+//a
+//b
+//c
+//d
+//e
+//f
+//g
+```
+
+### 字符串转为整数
+
+使用`Integer.parseInt(s)`
+
+```java
+String s = "12345";
+int b = Integer.parseInt(s);
+```
+
+### 长度函数
+
+1. `length`：**数组**长度
+
+2. `length()`：**字符串**长度
+
+3. `size()`：**列表**长度
+
+### List的构建
+
+对于单个List
+
+```java
+List<String> l = new ArrayList<String>();
+```
+
+对于嵌套List
+
+```java
+List<List<String>> ll = new ArrayList<>();
+```
 
 
 
