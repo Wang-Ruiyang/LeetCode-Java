@@ -1002,6 +1002,8 @@ sum = Integer.parseInt('23');
 
 # 870、优势洗牌⭐
 
+![image-20221009202231681](pic/image-20221009202231681.png)
+
 本题思路简单，但是操作困难，需要知道如何保证不动nums2的前提下，根据其值对其下标进行排序的方法
 
 这里涉及到sort的匿名函数表达式的知识点：
@@ -1101,10 +1103,6 @@ String[] s = new String[3];    //初始化为null
 int[] i = new int[3];          //初始化为0
 boolean b = new boolean[3];    //初始化为false
 ```
-
-
-
-
 
 
 
