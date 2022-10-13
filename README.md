@@ -524,6 +524,28 @@ Integer b = Integer.valueOf(a);
 
 
 
+# 198、打家劫舍⭐⭐
+
+典型的动态规划入门题
+
+思路[198. 打家劫舍 - 力扣（Leetcode）](https://leetcode.cn/problems/house-robber/solutions/138131/dong-tai-gui-hua-jie-ti-si-bu-zou-xiang-jie-cjavap/)
+
+### 优化前
+
+![image-20221013224043773](pic/image-20221013224043773.png)
+
+#### 注意：
+
+`dp[0]`表示没有房间，不对应`nums`中任何值
+
+`dp[i]`对应的应该是第`i-1`个屋子的最大收益。
+
+### 优化后（理论上更优的）
+
+![image-20221013224912862](pic/image-20221013224912862.png)
+
+
+
 # 524、通过删除字母匹配到字典里最长单词
 
 ## 方法一：排序后操作
@@ -660,6 +682,26 @@ class MyLinkedList {
 MyLinkedList linkedList = new MyLinkedList();
 linkedList.get(1);    
 ```
+
+
+
+# 769、最多能完成排序的块⭐
+
+
+
+思路：[769. 最多能完成排序的块 - 力扣（Leetcode）](https://leetcode.cn/problems/max-chunks-to-make-sorted/solutions/1888391/by-ac_oier-4uny/)
+
+注意题干：它表示在 `[0, n - 1]` 范围内的整数的排列，表示这n个数是0~n-1。
+
+思路：所以这个数组的下标就是整体排序好的数值。
+
+因此我们可以从头到尾遍历，记录最左边的值和最右边的值，记录在这一段中的max和min，当且仅当max==当前块的最右边值的下标且min==当前块的最左值的下标时，这一块结束。
+
+此时最左边的下标更新为max的值+1，再将min和max都初始化。
+
+
+
+
 
 
 
@@ -1196,6 +1238,18 @@ StringBuilder sb = new StringBuilder(s);
 
 
 
+# 1790、仅执行一次字符串交换能否使两个字符串相等
+
+![image-20221011221427327](pic/image-20221011221427327.png)
+
+思路简单，不多说了。
+
+
+
+
+
+
+
 # 1784、检查二进制字符串字段
 
 ## 方法一、正常思路
@@ -1341,6 +1395,18 @@ String s = String.valueOf(sa1);
 ```java
 s1.equals(s2);    //返回true或者false
 ```
+
+
+
+# 面试题01.05.一次编辑
+
+
+
+比较简单的一题，类似于`1913题`的思路.
+
+
+
+
 
 
 
