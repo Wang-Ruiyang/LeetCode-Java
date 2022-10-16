@@ -500,6 +500,39 @@ Integer b = Integer.valueOf(a);
 
 
 
+# 70、爬楼梯
+
+## 方法一、动态规划
+
+![image-20221016215036802](pic/image-20221016215036802.png)
+
+如果使用递归——妥妥的时间超时！！！
+
+所以只有正着推。可以得到规律：
+
+```java
+dp[0] = 1;
+dp[1] = 1;
+
+dp[i] = dp[i-1] + dp[i-2];
+```
+
+### 简单优化
+
+![image-20221016220255962](pic/image-20221016220255962.png)
+
+```java
+int a = 1, b = 1, temp = 0;
+for (int i=2;i<=n;i++) {
+    temp = a + b;
+    a = b;
+    b = temp;
+}
+return b;
+```
+
+
+
 # 135、分发糖果
 
 ## 方法一、递归
@@ -543,6 +576,16 @@ Integer b = Integer.valueOf(a);
 ### 优化后（理论上更优的）
 
 ![image-20221013224912862](pic/image-20221013224912862.png)
+
+
+
+# 509、斐波那契数
+
+![image-20221015213246525](pic/image-20221015213246525.png)
+
+简单哦~
+
+
 
 
 
@@ -685,6 +728,39 @@ linkedList.get(1);
 
 
 
+# 746、使用最小花费爬楼梯
+
+## 方法一、动态规划
+
+![image-20221016212056771](pic/image-20221016212056771.png)
+
+注意找到规律：
+
+```java
+dp[0] = 0;
+dp[1] = 0;
+
+dp[i] = Math.min(dp[i-1]+cost[i-1],dp[i-2]+cost[i-2]);
+```
+
+### 尝试优化空间
+
+![image-20221016214807512](pic/image-20221016214807512.png)
+
+```java
+int a = 0, b = 0, temp = 0;
+for (int i=2;i<=n;i++) {
+    temp = Math.min(b+cost[i-1],a+cost[i-2]);
+    a = b;
+    b = temp;
+}
+return b;
+```
+
+但是奇怪的是更慢了
+
+
+
 # 769、最多能完成排序的块⭐
 
 ![image-20221014091237039](pic/image-20221014091237039.png)
@@ -767,7 +843,7 @@ class Solution {
 
 
 
-# 801、使序列递增的最小交换次数⭐
+# 801、使序列递增的最小交换次数⭐⭐
 
 难题！
 
@@ -1203,6 +1279,14 @@ Arrays.sort(index, new Comparator<Integer>() {       //注意index一定要是In
 
 
 
+# 1137、第 N 个泰波那契数
+
+![image-20221015214614019](pic/image-20221015214614019.png)
+
+简单哦~
+
+
+
 # 927、三等分
 
 ![image-20221006155904427](pic/image-20221006155904427.png)
@@ -1225,6 +1309,18 @@ Arrays.sort(index, new Comparator<Integer>() {       //注意index一定要是In
 String[] s = new String[3];    //初始化为null
 int[] i = new int[3];          //初始化为0
 boolean b = new boolean[3];    //初始化为false
+```
+
+
+
+# 1441、用栈操作构建数组
+
+![image-20221015120642642](pic/image-20221015120642642.png)
+
+比较简单，注意ArrayList的构建：
+
+```java
+ArrayList<String> al = new ArrayList<String>();
 ```
 
 
@@ -1641,6 +1737,12 @@ Set对象的判断是否存在操作：
 set.contains(k)     //判断k这个值在set中是否存在，存在则返回true
 ```
 
+Set对象删除 
+
+```javaset.remove("book")
+set.remove("book");
+```
+
 ## 方法三、多路归并（多指针）（方法一优化）
 
 ![image-20220928214035095](pic/image-20220928214035095.png)
@@ -1712,3 +1814,12 @@ set.contains(k)     //判断k这个值在set中是否存在，存在则返回tru
 ![image-20220926213157385](pic/image-20220926213157385.png)
 
 本方法使用数学基础运算。先求出n个数之和，再求出nums中n-2个数之和，则这两个和之差就是`x1+x2`。我们可以通过`x = x1+x2`，算出x1和x2的中位数t，即**x1一定小于t，x2一定大于t**，求出1~t的和truenum，可以将nums遍历一遍，筛选每一个值小于等于t的num，再用truenum减去这个值，得到的结果就是x1。用`x2 = x - x1`得到结果。
+
+
+
+
+
+# 总结
+
+## char的操作
+
