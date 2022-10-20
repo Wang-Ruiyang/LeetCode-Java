@@ -653,6 +653,73 @@ return b;
 
 
 
+# 152、乘积最大子数组⭐
+
+![image-20221020111954135](pic/image-20221020111954135.png)
+
+动态规划经典题
+
+本题和`53、最大子数组和`有异曲同工之处。但是值得注意的是乘法中，两个负数相乘就会得到正数。
+
+所以我们不能只用一个last记录以当前元素结尾的最大值，我们需要用lastmax记录当前元素结尾的最大值、用lastmin记录当前元素结尾的最小值。
+
+最大值和最小值实时动态更新。如果当前元素<0，那么最大值就是上一个元素的最小值*nums[i]和它自身判断，最小值就是上一个元素的最大值\*nums[i]和它自身判断。nums[i]>0就很简单了。
+
+为了更广泛操作（装逼），我们可以提前计算：
+
+```java
+int a = lastmax*nums[i];
+int b = lastmin*nums[i];
+```
+
+那么每次更新的时候只需要：
+
+```java
+lastmax = Math.max(Math.max(a,b),nums[i]);
+lastmin = Math.min(Math.min(a,b),nums[i]);
+```
+
+其实不难理解，如果nums[i]<0，如果上一个值的max>0、min<0，那么取的是b；如果max<0、min<0，那么取的也还是b；如果max>0、min>0，那么取得还是b。但是如果nums[i]>0，那么一切都恰恰相反，都取a。所以我们只需要用a、b得最大值和它自身比较就能得到新的lastmax。
+
+lastmin同理。
+
+每次循环都用变量min找到最大值。
+
+完整代码如下：
+
+```java
+class Solution {
+    public int maxProduct(int[] nums) {
+        int lastmax = nums[0];
+        int lastmin = nums[0];
+        int max = nums[0];
+        
+        for (int i=1;i<nums.length;i++) {
+            
+            int a = lastmax*nums[i];
+            int b = lastmin*nums[i];
+
+            lastmax = Math.max(Math.max(a,b),nums[i]);
+            lastmin = Math.min(Math.min(a,b),nums[i]);
+
+            // if (nums[i]<0) {
+            //     lastmax = Math.max(b,nums[i]);
+            //     lastmin = Math.min(a,nums[i]);
+            // }
+            // else {
+            //     lastmax = Math.max(a,nums[i]);
+            //     lastmin = Math.min(b,nums[i]);
+            // }
+
+            max = Math.max(max,lastmax);
+        }
+        return max;
+    }
+}
+```
+
+
+
 # 198、打家劫舍（模板题）⭐⭐
 
 典型的动态规划入门题
@@ -946,6 +1013,36 @@ class Solution {
 新代码思路是：
 
 对于i和j分别指向start和end字符串，每次分别找一个非X字符，如果相同且满足i和j的关系的，则i++和j++；如果不满足直接返回false。这样的匹配规则，如果是可以完成匹配的，应该是i和j在某一次循环内同时到达终点，**不会存在i卡在某个非X字符，j已经到了终点**，如果是这种情况（即只有一个到了终点的），则之间判断i和j是否相等，如果相等，则返回true，不相等则返回false。
+
+
+
+# 779、第K个语法符号
+
+![image-20221020103345966](pic/image-20221020103345966.png)
+
+本题使用递归思想，不算很难，但是需要找到规律。
+
+> 第一行：0
+>
+> 第二行：**0**1
+>
+> 第三行：**01**10
+>
+> 第四行：**0110**1001
+>
+> 第五行：**01101001**10010110
+
+发现什么了！
+
+**每一行的前一半字符是上一行的完整字符。**
+
+**每一行的后一半字符是前一半字符的取反，也就是上一行的完整字符取反。**
+
+那结果很明显了！
+
+使用递归的思想，找到k在这一行的位置，用位运算轻松得到每一行的len。在前半段，它的值就等于上一行的k的位置；在后半段，那它的值就等于上一行的(k-len/2)的位置的值的**取反**。当然这里不是二进制，取反有风险，if判断一下喽！
+
+完美解决~
 
 
 
@@ -1500,6 +1597,127 @@ boolean b = new boolean[3];    //初始化为false
 ```java
 ArrayList<String> al = new ArrayList<String>();
 ```
+
+
+
+# 1567、乘积为正数的最长子数组长度⭐
+
+本题是`152、乘积最大子数组和	`的升级版。
+
+## 方法一、常规思路
+
+![image-20221020214723468](pic/image-20221020214723468.png)
+
+本思路其实很简单。
+
+先遍历一遍找到所有的0，在0与0之间找我们的答案。
+
+在每个0和0之间，如果负数的个数是0或者偶数，则这个范围长度就是这个范围内的max；如果不是偶数，用双指针对应范围内的首尾位置，找到第一个负数，返回除去这个负数的范围剩下的范围的长度，就是这个范围的max。具体可以看代码理解。
+
+```java
+for (int i=0;i<z.size()-1;i++) {
+    int left = z.get(i)+1;
+    int right = z.get(i+1);
+    if (f.get(i)%2==0) {
+        max = Math.max(max,right-left);
+    }
+    else {
+        int j=left,t=right-1;
+        while (j<=t) {
+            if (j==t) {     //一定是负数
+                max = Math.max(max,j-left);
+                break;
+            }
+            if (nums[j]<0) {
+                max = Math.max(max,right-j-1);
+                break;
+            }
+            if (nums[t]<0) {
+                max = Math.max(max,t-left);
+                break;
+            }
+            j++;
+            t--;
+        }
+    }
+}
+```
+
+## 方法二、动态规划⭐
+
+![image-20221020221331318](pic/image-20221020221331318.png)
+
+[题解](https://leetcode.cn/problems/maximum-length-of-subarray-with-positive-product/solutions/441152/cheng-ji-wei-zheng-shu-de-zui-chang-zi-shu-zu-ch-3/)
+
+这个很厉害！
+
+建立两个数组zs和fs：
+
+```java
+int[] zs = new int[n];    //记录以当前下标i结尾的乘积为正数的长度
+int[] fs = new int[n];    //记录以当前下标i结尾的乘积为负数的长度
+```
+
+处理第一个元素：
+
+```java
+if (nums[0]>0) {
+    zs[0] = 1;
+}
+else if (nums[0]<0){
+    fs[0] = 1;
+}
+//如果是0，那么zs和fs都是0
+
+int max = zs[0];
+```
+
+对i>=1后的所有元素进行分析：
+
+对于nums[i]<0：
+
+```java
+if (nums[i]>0) {
+    //连续正数的个数+1
+    zs[i] = zs[i-1] + 1;
+    //当前数为正数
+    if (fs[i-1]==0) {    //如果在此之前都没有能成为负数的乘积，再加上这个正数，负数长度仍然为0
+        fs[i] = 0;
+    }
+    else {
+        fs[i] = fs[i-1] + 1;
+    }
+}
+```
+
+对于nums[i]<0：
+
+```java
+if (nums[i]<0) {
+    if (fs[i-1]==0) {
+        zs[i] = 0;
+    }
+    else {
+        zs[i] = fs[i-1] + 1;
+    }
+    fs[i] = zs[i-1] + 1;
+}
+```
+
+对于nums[i]==0：
+
+```java
+if (nums[i]==0) {
+    zs[i] = 0;
+    fs[i] = 0;
+}
+```
+
+### 动态规划优化
+
+![image-20221020221215423](pic/image-20221020221215423.png)
+
+每次只使用了i-1的相关值，可以设置两个变量即可。
 
 
 
