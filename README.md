@@ -629,6 +629,22 @@ return b;
 
 
 
+# 121、买卖股票的最佳时机
+
+![image-20221021185552910](pic/image-20221021185552910.png)
+
+思路与`1014、最佳观光组合`相同。
+
+
+
+# 122、买卖股票的最佳时机 II
+
+![image-20221021194731667](pic/image-20221021194731667.png)
+
+这题很容易想复杂了，其实这题的目的就是为了始终不亏钱。所以只要是相邻两个升序的就买了就卖，一定能赚一笔！
+
+
+
 # 135、分发糖果
 
 ## 方法一、递归
@@ -1514,6 +1530,125 @@ Arrays.sort(index, new Comparator<Integer>() {       //注意index一定要是In
 
 
 
+# 901、股票价格跨度⭐
+
+## 方法一、栈⭐
+
+![image-20221021183314076](pic/image-20221021183314076.png)
+
+#### 题目翻译
+
+返回每一天的比这一天的股票价格小于或者等于的连续天数。
+
+#### 思路
+
+构造一个二元栈：
+
+```java
+class Stock {
+    public int price;
+    public int day;
+    public Stock(int price, int day) {
+        this.price = price;
+        this.day = day;
+    } 
+}
+```
+
+对于输入的每一个节点，默认day是1。[题解](https://leetcode.cn/problems/online-stock-span/solutions/1910400/-by-muse-77-byhj/)
+
+![image-20221021183855971](pic/image-20221021183855971.png)
+
+```java
+public int next(int price) {
+    int day = 1;
+    if (!st.isEmpty()){
+        while (!st.isEmpty()) {
+            Stock temp = st.peekLast();
+            if (price>=temp.price) {
+                st.pollLast();
+                day = day + temp.day;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    st.addLast(new Stock(price,day));
+    return day;
+}
+```
+
+#### 完整代码
+
+（面向对象的写法，注意结构体的构造等知识）
+
+```java
+class StockSpanner {
+
+    Deque<Stock> st;
+
+    class Stock {
+        public int price;
+        public int day;
+        public Stock(int price, int day) {
+            this.price = price;
+            this.day = day;
+        } 
+    }
+
+    public StockSpanner() {
+        st = new ArrayDeque<Stock>();
+    }
+    
+    public int next(int price) {
+        int day = 1;
+        if (!st.isEmpty()){
+            while (!st.isEmpty()) {
+                Stock temp = st.peekLast();
+                if (price>=temp.price) {
+                    st.pollLast();
+                    day = day + temp.day;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        st.addLast(new Stock(price,day));
+        return day;
+    }
+}
+```
+
+## 方法二、数组
+
+![image-20221021184036499](pic/image-20221021184036499.png)
+
+思路一致。
+
+我们还需要两个指针，分别是index指针，用来指向“待输入股票”；p指针，index指针的前一个指针，用来与“待输入股票”进行price对比用的，如果它的price小于等于“待输入股票”的price，p就会向前移动。
+
+关于p向前移动还有一点需要注意的就是，p向前移动格子的数量，就是days的具体值；当days等于1时，就向前移动1个格子；如果days等于2时，就向前移动2个格子（因为days等于2，说明已经是两个格子聚合过的值了，就不需要重复统计了）。
+
+![image-20221021184303533](pic/image-20221021184303533.png)
+
+初始化时注意：
+
+```java
+public StockSpanner() {
+    index = 0;
+    prices = new int[100010];
+    days = new int[100010];
+}
+```
+
+## 方法三、List
+
+![image-20221021184138152](pic/image-20221021184138152.png)
+
+思路一致。
+
 
 
 # 904、水果成篮
@@ -1564,7 +1699,38 @@ Arrays.sort(index, new Comparator<Integer>() {       //注意index一定要是In
 
 
 
-# 1137、第 N 个泰波那契数
+# 1014、最佳观光组合⭐
+
+#### 动态规划
+
+![image-20221021185104168](pic/image-20221021185104168.png)
+
+数学的正则运算。
+
+`values[i] + values[j] + i - j == (values[i] + i) +  (values[j] - j)`
+
+完整代码，思路很清晰：
+
+```java
+class Solution {
+    public int maxScoreSightseeingPair(int[] values) {
+        int res = 0;
+        int maxi = values[0];    //记录最大的values[i]+i
+        //找最大的values[j]-j
+        for  (int j=1;j<values.length;j++) {
+            //以当前节点为j，将它和前面的最大的i对应的值相加，和原有的res比较
+            res = Math.max(res, maxi+values[j]-j);
+            //判断如果当前节点不是j而是i，和原本的maxi进行比较更新maxi
+            maxi = Math.max(maxi, values[j]+j);
+        } 
+        return res;
+    }
+}
+```
+
+
+
+# 1137、第 N 个斐波那契数
 
 ![image-20221015214614019](pic/image-20221015214614019.png)
 
