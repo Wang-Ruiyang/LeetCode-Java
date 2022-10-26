@@ -1432,6 +1432,139 @@ sum = Integer.parseInt('23');
 
 
 
+# 862、和至少为K的最短子数组⭐⭐
+
+![image-20221026215844261](pic/image-20221026215844261.png)
+
+很难且恶心人的一题。
+
+贴上我的心路历程：
+
+一开始我是这样的：
+
+```java
+class Solution {
+    public int shortestSubarray(int[] nums, int k) {
+        int n = nums.length;
+        if (n==1) {
+            if (nums[0]>=k) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        }
+        int i=0, j=1;
+        int temp = nums[i];
+        int step = 1;
+        int min = 100001;
+        while (i<n) {
+            if (j<n) {
+                if (temp>=k) {
+                    min = Math.min(min,step);
+                    temp -= nums[i];
+                    i++;
+                    step--;
+                }
+                else {
+                    temp += nums[j];
+                    step++;
+                    j++;
+                }
+            }
+            else {
+                if (temp>=k) {
+                    min = Math.min(min,step);
+                    temp -= nums[i];
+                    i++;
+                    step--;
+                }
+                else {
+                    temp -= nums[i];
+                    i++;
+                    step--;
+                }
+            }
+            
+        }
+        return min==100001 ? -1 : min;
+    }
+}
+```
+
+后来发现，如果出现 k=5， 1, -2, 2, 7这种情况就没法找到真正的最短。
+
+然后我使用双层for循环：
+
+```java
+class Solution {
+    public int shortestSubarray(int[] nums, int k) {
+        int n = nums.length;
+        int[] preadd = new int[n+1];    //记录当前i以前的元素的和
+        for (int i=1;i<n+1;i++) {
+            preadd[i] = preadd[i-1] + nums[i-1];
+        }
+        int min = 100001;
+        for (int i=0;i<n;i++) {
+            if (nums[i]<=0) {
+                continue;
+            }
+            for (int j=i+1;j<n+1;j++) {
+                if (j-i>=min) {
+                    break;
+                }
+                if (preadd[j]-preadd[i]>=k) {
+                    min = Math.min(min,j-i);
+                    break;
+                }
+            }
+        }
+        return min==100001 ? -1 : min;
+    }
+}
+```
+
+最后，根据题解……我转换了思路。⭐
+
+以每个元素为开始的最短的长度是一定的
+
+preadd的作用看代码能懂吧，所以以i为开始的满足条件的数组的长度就是`preadd[j]-preadd[i]`，长度就是`j-i`。
+
+利用一个for循环控制结束的字符，用一个队列控制开始的字符。（其实数组也可，但是会慢些）
+
+第一个while是确定结束位置，依次更新初始位置。
+
+第二个while是对结束位置的左边进行筛选，为了减少复杂度，如果它的相邻左边的preadd比它的preadd要大，根据`preadd[j]-preadd[i]`，如果preadd[i]要比preadd[i-1]小，那么以某个j结尾的，一定会选择i而不会以i-1开头，所以在这里可以删掉i-1了。
+
+每次都将当前j加入队列。
+
+```java
+class Solution {
+    public int shortestSubarray(int[] nums, int k) {
+        int n = nums.length;
+        long[] preadd = new long[n+1];    //记录当前i以前的元素的和
+        for (int i=1;i<n+1;i++) {
+            preadd[i] = preadd[i-1] + nums[i-1];     //存的是当前值之前的所有的和
+        }
+        int min = n+1;
+        Deque<Integer> dq = new ArrayDeque<Integer>();    //dq存的是需要查询的起始位置
+        for (int j=0;j<n+1;j++) {     //以i为结尾，以dq.pollFirst()为开始
+            while (!dq.isEmpty() && preadd[j]-preadd[dq.peekFirst()]>=k) {
+                int i = dq.pollFirst();
+                min = Math.min(min,j-i);
+            }
+            while (!dq.isEmpty() && preadd[dq.peekLast()]>=preadd[j]) {
+                dq.pollLast();
+            }
+            dq.addLast(j);
+        }
+        return min==n+1 ? -1 : min;
+    }
+}
+```
+
+
+
 # 870、优势洗牌⭐
 
 ![image-20221009202231681](pic/image-20221009202231681.png)
@@ -1659,6 +1792,28 @@ public StockSpanner() {
 
 
 
+#  915、分割数组
+
+## 方法一、最小值分割
+
+![image-20221025214008642](pic/image-20221025214008642.png)
+
+先找到数组的最小值，最小值包括左边的部分和右边的部分一定需要分开的，如果左边的最大值<=右边的最小值，那么ok，否则对右边部分继续找最小值，继续划分。
+
+## 方法二、两次遍历
+
+![image-20221025220514828](pic/image-20221025220514828.png)
+
+先从后向前遍历一遍，用min[i]表示i位置及其以后区域的最小值。
+
+再从前往后遍历一遍，用max记录以当前元素结尾的区域的最大值。
+
+第二次遍历过程中，如果某一次遍历时发现`max <= min[i+1]`，则i就是分隔符，返回i+1个元素。
+
+
+
+
+
 # 918、环形子数组的最大和⭐
 
 ![image-20221019211520951](pic/image-20221019211520951.png)
@@ -1696,6 +1851,109 @@ public StockSpanner() {
 思路有点复杂，实现不难：
 
 先判断每一组有多少个1，把每个1的下标都放在一个新的数组中，然后判断三组之间对应的1和1之间的距离是否相等，再判断最后一组的最后一个1后的空格其他组是否能满足。
+
+
+
+# 934、最短的桥⭐
+
+比较难的一题，题目难懂，方法难想到。
+
+![image-20221025210227986](pic/image-20221025210227986.png)
+
+#### 思路
+
+![image-20221025210421377](pic/image-20221025210421377.png)
+
+#### 代码
+
+详细的思路看代码更好理解
+
+```java
+class Solution {
+
+    int[][] step = {{1,0},{-1,0},{0,1},{0,-1}};
+
+    Deque<int[]> edge;
+
+    public int shortestBridge(int[][] grid) {
+        boolean isFind = false;
+
+        edge = new ArrayDeque<>();
+
+        //通过找到一个岛屿的一块，利用DFS找到这个岛屿的所有块，并标记为2
+        //并找到它的边源水域，也标记成为2，并加入edge队列
+        for (int i=0;i<grid.length;i++) {
+            if (isFind) {
+                break;
+            }
+            for (int j=0;j<grid[0].length;j++) {
+                if (isFind) {
+                    break;
+                }
+                if (grid[i][j]==1) {    //表示已经找到了第一个岛屿的一块了
+                    isFind = true;
+                    Mark(grid,i,j);     //对当前块进行标记为2（通过DFS岛屿标记）
+                }
+            }
+        }
+
+        int result = 1;    //目前已经扩充一波水域
+
+        //此时第一轮扩充已经完成
+        while (!edge.isEmpty()) {
+
+            int n = edge.size();    //获取第一个岛屿的边缘水域
+            for (int i=0;i<n;i++) {
+                int[] loc = edge.pollFirst();    //第一个区域的边缘位置
+                for (int[]s : step) {    //对当前位置的四个方向进行扩充
+                    int x = loc[0]+s[0], y = loc[1]+s[1];    
+                    if (!isLegal(x,y,grid.length)) {       //如果位置不合法
+                        continue;
+                    }
+                    if (grid[x][y] == 2) {
+                        continue;
+                    }
+                    if (grid[x][y] == 1) {    //表示已经找到了另一个岛屿
+                        return result;
+                    }
+                    if (grid[x][y] == 0) {    //扩充水域
+                        grid[x][y] = 2;
+                        edge.addLast(new int[]{x,y});
+                    }
+                }
+            }
+            result++;
+        }
+        return result;
+    }
+
+    public void Mark(int[][] grid, int i, int j) {
+        if (!isLegal(i,j,grid.length)) {    //如果不是合法位置，退出
+            return;
+        }
+        if (grid[i][j]==2) {    //如果是同一个岛屿且已经被标记，退出
+            return;
+        }
+        if (grid[i][j]==1) {     //如果是同一个岛屿但是还没有被标记
+            grid[i][j] = 2;
+            for (int[]s : step) {
+                Mark(grid,i+s[0],j+s[1]);
+            }
+        }
+        if (grid[i][j]==0) {     //如果遇到水域，则表示已经到了这个岛屿的边界了，将这个水也变成岛屿的一部分，在存储边界水域的edge中添加
+            grid[i][j] = 2;
+            edge.addLast(new int[]{i,j});
+        }
+    }
+
+    public boolean isLegal(int i, int j, int n) {    //判断是否在合法区域（没有超过边界）
+        if (i<0 || i>=n || j<0 || j>=n) {
+            return false;
+        }
+        return true;
+    }
+}
+```
 
 
 
