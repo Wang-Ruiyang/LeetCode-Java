@@ -919,6 +919,78 @@ linkedList.get(1);
 
 
 
+# 714、买卖股票的最佳时机含手续费⭐
+
+## 方法一、贪心
+
+![image-20221027164450020](pic/image-20221027164450020.png)
+
+比较晦涩难懂，对left的定义很重要，特别是在`prices[i]>left+fee`情况的left改变比较难。看代码理解吧。
+
+```java
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        int n = prices.length;
+
+        int left = prices[0];
+        int sum = 0;
+        for (int i=1;i<n;i++) {
+            if (prices[i]<left) {   // prices[i]+fee < left+fee
+                left = prices[i];
+            }
+            else if (prices[i]>left+fee) {    //如果后面的减去left和fee依然有收益，那就可以尝试将股票卖出
+                sum += prices[i]-left-fee;
+
+                //但是为了防止遇到的是局部最优：
+                // left       prices[i]          prices[i+1]
+                //实际上的真实收益应该是：prices[i+1]-left-free
+                // prices[i]-left-free    + 一个收益   =   prices[i+1]-left-free
+                // 解得这个收益为：prices[i+1]-prices[i]
+                // 但是 sum += prices[i+1]-prices[i]-fee;，所以left应该设定为prices[i]-fee
+
+                left = prices[i]-fee;    
+            }
+        }
+        return sum;
+    }
+}
+```
+
+## 方法二、动态规划
+
+![image-20221027164704099](pic/image-20221027164704099.png)
+
+唉，动态规划，容易理解
+
+```java
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        int n = prices.length;
+
+        //dp[i][0]表示i天结束后手上没有股票的最大收益
+        //dp[i][1]表示i天结束后手上有一张股票的最大收益
+
+        int[][] dp = new int[n][2];    
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+
+        for (int i=1;i<n;i++) {
+            dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1]+prices[i]-fee);
+            dp[i][1] = Math.max(dp[i-1][1],dp[i-1][0]-prices[i]);
+        }
+        return dp[n-1][0];
+    }
+}
+```
+
+### 优化
+
+![image-20221027165234692](pic/image-20221027165234692.png)
+
+动态规划常规优化喽~
+
+
+
 # 740、删除并获得点数⭐
 
 ![image-20221017202842714](pic/image-20221017202842714.png)
@@ -1792,6 +1864,86 @@ public StockSpanner() {
 
 
 
+# 907、子数组的最小值之和⭐⭐
+
+## 方法一、单调栈+动态规划
+
+![image-20221028190348577](pic/image-20221028190348577.png)
+
+维护两个数组，分别维护左边界和右边界（对于下标为i的辐射左范围为left[i]+1（left[i]不在范围内））。
+
+建立一个单调栈，两次遍历数组，更新左边界和右边
+
+> 3 4 1 2 5 6
+>
+> 对于1的辐射范围，左边范围长度为3，右边为4
+> 1, 41, 12, 341, 412, 125, 3412, 4125, 1256, 34125, 41256, 341256，共12个
+>
+> 对于4的辐射范围，左边范围长度为1，右边为1
+> 4，共1个
+>
+> 对于6的辐射范围，左边范围长度为1，右边为1
+> 6，共1个
+
+看代码
+
+```java
+class Solution {
+    public static int MOD = 1000000007;
+    public int sumSubarrayMins(int[] arr) {
+        int n = arr.length;
+        int[] left = new int[n];    //对于下标为i的辐射左范围为left[i]+1（left[i]不在范围内）
+        int[] right = new int[n];
+        
+        Deque<Integer> dq = new ArrayDeque<Integer>();
+        
+        for (int i=0;i<n;i++) {
+            while (!dq.isEmpty() && arr[i]<arr[dq.peekLast()]) {
+                dq.pollLast();
+            }
+            if (dq.isEmpty()) {
+                left[i] = -1;
+            }
+            else {
+                left[i] = dq.peekLast();
+            }
+            dq.addLast(i);
+        }
+
+        dq.clear();
+        for (int i=n-1;i>=0;i--) {
+            while (!dq.isEmpty() && arr[i]<=arr[dq.peekLast()]) {
+                dq.pollLast();
+            }
+            if (dq.isEmpty()) {
+                right[i] = n;
+            }
+            else {
+                right[i] = dq.peekLast();
+            }
+            dq.addLast(i);
+        }
+
+        // 3 4 1 2 5 6
+        // 对于1的辐射范围，左边范围长度为3，右边为4
+        // 1, 41, 12, 341, 412, 125, 3412, 4125, 1256, 34125, 41256, 341256，共12个
+        // 对于4的辐射范围，左边范围长度为1，右边为1
+        // 4，共1个
+        // 对于6的辐射范围，左边范围长度为1，右边为1
+        // 6，共1个
+
+        long sum =0;
+        for (int i=0;i<n;i++) {
+            sum = (sum + (long)arr[i] * (i-left[i]) * (right[i]-i)) % MOD;
+        }
+
+        return (int)sum;
+    }
+}
+```
+
+
+
 #  915、分割数组
 
 ## 方法一、最小值分割
@@ -2310,6 +2462,14 @@ class Solution {
 ![image-20221007095515941](pic/image-20221007095515941.png)
 
 思路简单，只要判断当前值是否比上一个值大，如果大，那以当前值结尾的最大升序子数组和 = 以上一个值为结尾的最大升序子数组和 + 当前值的大小。否则值为本身。
+
+
+
+# 1822、数组元素积的符号
+
+![image-20221027101133285](pic/image-20221027101133285.png)
+
+简单模拟题……
 
 
 
