@@ -1,15 +1,16 @@
 @echo off
  
-title GIT一键提交
-color 3
+title wry/leetcode-java自动提交器
+
+color 2
 echo 当前目录是：%cd%
 echo;
- 
+
 echo 开始添加变更：git add .
 git add .
 echo;
- 
-set /p declation=输入提交的commit信息:
+
+set /p declation=输入提交的commit信息：
 git commit -m "%declation%"
 echo;
  
