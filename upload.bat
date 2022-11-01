@@ -14,8 +14,8 @@ set /p declation=输入提交的commit信息：
 git commit -m "%declation%"
 echo;
  
-echo 本地分支拉取远程主分支：git pull origin master
-git pull origin master
+echo 本地分支拉取远程主分支
+git push
 echo;
  
 echo 执行完毕！
